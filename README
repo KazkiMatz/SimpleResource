@@ -1,5 +1,10 @@
 Installation on Rails
 
+0. Dependencies:
+    * ActiveRecord 2.3.2
+    * ActiveSupport 2.3.2 (only used for .to_json method)
+    * gem-memcached(http://blog.evanweaver.com/files/doc/fauna/memcached/files/README.html)
+
 1. Place all files into lib/simple_resource on your Rails project.
 
 2. Create two new tables on your database that store entity records and index records respectively. An example below:
@@ -42,7 +47,13 @@ index:
   host: localhost
 
 
-4. Check if it works correctly:
+4. Add the following 3 lines to your config/development.rb
+
+MEMCACHE_HOST = ['localhost:11211']
+MEMCACHE_PREFIX = 'some_prefix_'
+PRELOAD_CACHE = false
+
+5. Check if it works correctly:
 
 $ script/console
 

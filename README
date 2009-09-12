@@ -1,0 +1,74 @@
+Installation on Rails
+
+1. Place all files into lib/simple_resource on your Rails project.
+
+2. Create two new tables on your database that store entity records and index records respectively. An example below:
+
+CREATE TABLE `entities` (
+  `entity_group_entity_id` VARCHAR(250) NOT NULL PRIMARY KEY,
+  `body` MEDIUMBLOB,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE `indices` (
+  `index_id` INT NOT NULL,
+  `entity_id` VARCHAR(200) NOT NULL,
+  `sort` INT NOT NULL,
+  PRIMARY KEY  (`index_id`,`entity_id`),
+  INDEX (`index_id`, `sort`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+3. Add two new db connection settings to your database.yml. An example below:
+
+entity:
+  adapter: mysql
+  encoding: utf8
+  database: your_db_name
+  pool: 5
+  username: 
+  password: 
+  host: localhost
+
+index:
+  adapter: mysql
+  encoding: utf8
+  database: your_db_name
+  pool: 5
+  username: 
+  password: 
+  host: localhost
+
+
+4. Check if it works correctly:
+
+$ script/console
+
+>> class SimpleTest < SimpleResource::Base
+>>   include SimpleResource::MysqlEntityBackend
+>> end
+=> SimpleTest
+
+?> e = SimpleTest.create("foo" => "bar")
+=> #<SimpleTest:0xb7649670 @attributes={"id"=>1, "foo"=>"bar"}>
+>> e.foo
+=> "bar"
+>> e.bar = "zoo"
+=> "zoo"
+>> e
+=> #<SimpleTest:0xb7649670 @attributes={"id"=>1, "foo"=>"bar", "bar"=>"zoo"}>
+>> e.save
+=> nil
+>> e.id
+=> 1
+>> SimpleTest.find(1)
+=> #<SimpleTest:0xb762fa18 @attributes={"id"=>1, "foo"=>"bar", "bar"=>"zoo"}>
+>> e.destroy
+=> nil
+
+
+
+
+

@@ -154,8 +154,8 @@ module SimpleResource
     end
 
     def == another
-      return false unless another.is_a?(SimpleResource::Base)
-      self.id == another.id rescue false
+      return false unless another.is_a?(self.class)
+      self.id == another.id
     end
 
     def id

@@ -22,7 +22,7 @@ CREATE TABLE `indices` (
   `sort` INT NOT NULL,
   PRIMARY KEY  (`index_id`,`entity_id`),
   INDEX (`index_id`, `sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB;
 
 
 
@@ -85,5 +85,15 @@ Note:
 All keys of stored attributes should be String, not Symbol.
 All values of stored attributes should be either String, Integer, Float, Hash or Array, recursively.
 (Since SimpleResource uses json format for data store, attributes should be a form which can be represented in json.)
+
+
+Licence
+
+ GNU General Public License
+
+
+Author
+
+ Kazuki MATSUMOTO (deliciouskid@gmail.com)
 
 

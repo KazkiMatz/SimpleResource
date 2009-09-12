@@ -33,15 +33,15 @@ module SimpleResource
         end
 
         raise SimpleResource::Exceptions::NotFound unless body
-        JSON.parse(body)
+        body
       end
 
       def put(query, body)
         begin
           record = SimpleResource::MysqlEntity.find("#{query[:collection_name]}/#{query[:key]}")
-          record.update_attribute(:body, body.to_json)
+          record.update_attribute(:body, body)
         rescue ActiveRecord::RecordNotFound
-          record = SimpleResource::MysqlEntity.new(:body => body.to_json)
+          record = SimpleResource::MysqlEntity.new(:body => body)
           record.id = "#{query[:collection_name]}/#{query[:key]}"
           record.save
         end

@@ -1,9 +1,9 @@
 Installation on Rails
 
 0. Dependencies:
-    * ActiveRecord 2.3.2
-    * ActiveSupport 2.3.2 (only used for .to_json method)
-    * gem-memcached(http://blog.evanweaver.com/files/doc/fauna/memcached/files/README.html)
+    * JSON gem (http://flori.github.com/json/)
+    * ActiveRecord
+    * memcached gem (http://blog.evanweaver.com/files/doc/fauna/memcached/files/README.html)
 
 1. Place all files into lib/simple_resource on your Rails project.
 

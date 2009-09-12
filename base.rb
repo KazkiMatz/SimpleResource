@@ -1,3 +1,5 @@
+require 'json/ext'
+
 module SimpleResource
   class ElasticHash < Hash
     def initialize(hash)
@@ -72,6 +74,13 @@ module SimpleResource
 
   class Base
     class << self
+      def json_encode hash
+        JSON.generate hash
+      end
+
+      def json_decode str
+        JSON.parse str
+      end
 
       def collection_name
         self.to_s
@@ -84,7 +93,7 @@ module SimpleResource
       end
 
       def find(key)
-        self.new(get(:collection_name => collection_name, :key => key))
+        self.new(self.json_decode( get(:collection_name => collection_name, :key => key) ))
       end
 
       def find_with_lock(key)
@@ -114,7 +123,7 @@ module SimpleResource
       def create attributes
         attributes["id"] = gen_key! unless attributes["id"]
         returning self.new(attributes) do |obj|
-          put({:collection_name => collection_name, :key => obj.id}, obj.attributes)
+          put({:collection_name => collection_name, :key => obj.id}, json_encode(obj.attributes))
         end
       end
 
@@ -168,7 +177,8 @@ module SimpleResource
 
     def save
       self.id = self.class.gen_key! unless self.id
-      self.class.put({:collection_name => self.class.collection_name, :key => self.id}, attributes)
+      self.class.put({:collection_name => self.class.collection_name, :key => self.id}, self.class.json_encode(attributes))
+      true
     end
 
     def destroy
@@ -179,6 +189,7 @@ module SimpleResource
         end
       end
       self.class.delete(:collection_name => self.class.collection_name, :key => self.id)
+      true
     end
 
     def lock

@@ -15,7 +15,7 @@ module SimpleResource
 
         [
           SimpleResource::MysqlIndex.records(index_id(query[:index_name]), params[:page], params[:page_size]).map{|record| [record.entity_id, record.sort]},
-          Pager.new('totalnum' => SimpleResource::MysqlIndex.record_count(index_id(query[:index_name])),
+          SimpleResource::Pager.new('totalnum' => SimpleResource::MysqlIndex.record_count(index_id(query[:index_name])),
                     'size' => params[:page_size],
                     'from' => params[:page_size] * (params[:page] - 1))
         ]

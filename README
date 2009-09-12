@@ -70,5 +70,9 @@ $ script/console
 
 
 
+Note:
+All keys of stored attributes should be String, not Symbol.
+All values of stored attributes should be either String, Integer, Float, Hash or Array, recursively.
+(Since SimpleResource uses json format for data store, attributes should be a form which can be represented in json.)
 
 

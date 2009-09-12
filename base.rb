@@ -75,7 +75,7 @@ module SimpleResource
   class Base
     class << self
       def json_encode hash
-        JSON.generate hash
+        hash.to_json
       end
 
       def json_decode str

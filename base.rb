@@ -35,21 +35,29 @@ module SimpleResource
   end
 
   class ElasticArray < Array
-    def [] *index
-      elastically super
+    def [] index
+      if index.is_a?(Range) || index.is_a?(Array)
+        self[index] = super.map{|item| elastically item}
+      else
+        if super
+          self[index] = elastically super
+        else
+          super
+        end
+      end
     end
 
     def first
-      elastically super
+      self[0]
     end
 
     def last
-      elastically super
+      self[-1]
     end
 
     def each
-      super do |x|
-        yield elastically(x)
+      (0...size).each do |i|
+        yield self[i]
       end
     end
 

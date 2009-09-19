@@ -36,7 +36,7 @@ module SimpleResource
 
   class ElasticArray < Array
     def [] index
-      if index.is_a?(Range) || index.is_a?(Array)
+      if index.class == Range || index.class == Array
         self[index] = super.map{|item| elastically item}
       else
         if super
@@ -146,23 +146,17 @@ module SimpleResource
       end
 
       def gen_key!
+        key_increment = find_or_create_with_lock('key_increment', {'counter' => 0}) do |k|
+                          k.counter += 1
+                          k.save
+                        end
         begin
-          get_lock 'key_increment'
-          entity = self.find('key_increment')
-          entity.counter += 1
-          entity.save
-        rescue SimpleResource::Exceptions::NotFound
-          entity = create('id' => 'key_increment', 'counter' => 1)
-        ensure
-          release_lock 'key_increment'
-        end
-
-        begin
-          self.find(entity.counter)
+          self.find(key_increment.counter)
           raise SimpleResource::Exceptions::DuplicatedKey
         rescue SimpleResource::Exceptions::NotFound
-          return entity.counter
         end
+
+        key_increment.counter
       end
     end
 
@@ -173,6 +167,10 @@ module SimpleResource
     def == another
       return false unless another.is_a?(self.class)
       self.id == another.id
+    end
+
+    def copy
+      self.class.new(Marshal.load(Marshal.dump(@attributes)))
     end
 
     def id

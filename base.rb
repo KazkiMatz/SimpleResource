@@ -35,12 +35,14 @@ module SimpleResource
   end
 
   class ElasticArray < Array
-    def [] index
-      if index.class == Range || index.class == Array
+    def [] *index
+      if index.size > 1
         self[index] = super.map{|item| elastically item}
+      elsif index[0].class == Range
+        self[index[0]] = super.map{|item| elastically item}
       else
         if super
-          self[index] = elastically super
+          self[index[0]] = elastically super
         else
           super
         end

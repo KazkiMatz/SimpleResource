@@ -1,4 +1,5 @@
 require 'memcached'
+require 'digest/md5'
 
 module SimpleResource
   module MysqlEntityBackend

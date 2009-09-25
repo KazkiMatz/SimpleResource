@@ -93,7 +93,7 @@ module SimpleResource
       end
 
       def collection_name
-        self.to_s.split('::')[1]
+        self.to_s
       end
 
       def paginate(index_name, params = {})

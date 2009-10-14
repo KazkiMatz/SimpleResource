@@ -1,4 +1,5 @@
 Installation on Rails
+=====================
 
 0. Dependencies:
     * JSON gem (http://flori.github.com/json/)
@@ -81,18 +82,22 @@ $ script/console
 
 
 
-Note:
+Note
+====
+
 All keys of stored attributes should be String, not Symbol.
 All values of stored attributes should be either String, Integer, Float, Hash or Array, recursively.
 (Since SimpleResource uses json format for data store, attributes should be a form which can be represented in json.)
 
 
 Licence
+=======
 
  GNU General Public License
 
 
 Author
+======
 
  Kazuki MATSUMOTO (deliciouskid@gmail.com)
 

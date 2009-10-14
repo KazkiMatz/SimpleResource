@@ -20,11 +20,12 @@ module SimpleResource
       end
 
       def get(query)
+        key = "#{query[:collection_name]}/#{query[:key]}"
         begin
           body = conn.get(memcache_key(query))
         rescue Memcached::NotFound
           begin
-            record = SimpleResource::MysqlEntity.find("#{query[:collection_name]}/#{query[:key]}")
+            record = SimpleResource::MysqlEntity.find(key)
             body = record.body
           rescue ActiveRecord::RecordNotFound
             body = nil
@@ -33,11 +34,16 @@ module SimpleResource
           end
         end
 
-        raise SimpleResource::Exceptions::NotFound unless body
+        raise SimpleResource::Exceptions::NotFound, key unless body
         body
       end
 
       def put(query, body)
+        begin
+          return false if body == get(query)
+        rescue SimpleResource::Exceptions::NotFound
+        end
+
         begin
           record = SimpleResource::MysqlEntity.find("#{query[:collection_name]}/#{query[:key]}")
           record.update_attribute(:body, body)
@@ -47,6 +53,8 @@ module SimpleResource
           record.save
         end
         conn.delete(memcache_key(query)) rescue nil
+
+        true
       end
 
       def delete(query)

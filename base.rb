@@ -14,6 +14,18 @@ module SimpleResource
       self["id"] = value
     end
 
+    def each
+      super do |k, v|
+        yield([k, self[k] = elastically(v)])
+      end
+    end
+
+    def each_pair
+      super do |k, v|
+        yield(k, self[k] = elastically(v))
+      end
+    end
+
     def method_missing(key, *args)
       key_str = key.to_s
       suffix = key_str.last[-1]
@@ -23,13 +35,20 @@ module SimpleResource
         key_str = key_str[0..-2] if suffix == "?"[0]
         #raise NameError unless has_key?(key_str)
         return nil unless has_key?(key_str)
-        if self[key_str].class == Hash
-          self[key_str] = ElasticHash.new(self[key_str])
-        elsif self[key_str].class == Array
-          self[key_str] = ElasticArray.new(self[key_str])
-        else
-          self[key_str]
-        end
+
+        self[key_str] = elastically self[key_str]
+      end
+    end
+
+    private
+
+    def elastically obj
+      if obj.class == Hash
+        ElasticHash.new(obj)
+      elsif obj.class == Array
+        ElasticArray.new(obj)
+      else
+        obj
       end
     end
   end
@@ -154,7 +173,7 @@ module SimpleResource
                         end
         begin
           self.find(key_increment.counter)
-          raise SimpleResource::Exceptions::DuplicatedKey
+          raise SimpleResource::Exceptions::DuplicatedKey, "#{key_increment.counter}"
         rescue SimpleResource::Exceptions::NotFound
         end
 

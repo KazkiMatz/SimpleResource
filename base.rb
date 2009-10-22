@@ -134,7 +134,7 @@ module SimpleResource
         release_lock(key)
       end
 
-      def find_or_create(key, attributes)
+      def find_or_create(key, attributes={})
         self.find(key)
       rescue SimpleResource::Exceptions::NotFound
         self.create(attributes.update("id" => key))

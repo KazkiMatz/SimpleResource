@@ -22,7 +22,7 @@ module SimpleResource
       def get(query)
         key = "#{query[:collection_name]}/#{query[:key]}"
         begin
-          body = conn.get(memcache_key(query))
+          body = conn.get(memcache_key(query), false)
         rescue Memcached::NotFound
           begin
             record = SimpleResource::MysqlEntity.find(key)
@@ -30,11 +30,11 @@ module SimpleResource
           rescue ActiveRecord::RecordNotFound
             body = nil
           ensure
-            conn.set(memcache_key(query), body, 0)
+            conn.set(memcache_key(query), body, 0, false)
           end
         end
 
-        raise SimpleResource::Exceptions::NotFound, key unless body
+        raise SimpleResource::Exceptions::NotFound, key unless body && body.length > 0
         body
       end
 
@@ -78,7 +78,7 @@ module SimpleResource
         true
       rescue Memcached::NotStored
         # 30sec to emergency release
-        if lock = (conn.get(writelock_key(query)) rescue nil)
+        if lock = (conn.get(writelock_key(query), false) rescue nil)
           if Time.now.to_i > lock.to_i + 30
             release_mutex(query)
           end
@@ -91,7 +91,7 @@ module SimpleResource
       end
 
       def memcache_key(query)
-        "#{MEMCACHE_PREFIX}/#{query[:collection_name]}/#{query[:key]}"
+        "#{MEMCACHE_PREFIX}#{query[:collection_name]}/#{query[:key]}"
       end
 
     end

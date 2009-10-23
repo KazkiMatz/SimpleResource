@@ -74,7 +74,7 @@ module SimpleResource
       end
 
       def get_mutex(query, queued = true)
-        conn.add writelock_key(query), Time.now.to_i.to_s
+        conn.add writelock_key(query), Time.now.to_i.to_s, 0, false
         true
       rescue Memcached::NotStored
         # 30sec to emergency release

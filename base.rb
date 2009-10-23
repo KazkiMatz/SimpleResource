@@ -76,6 +76,14 @@ module SimpleResource
       self[-1]
     end
 
+    def pop
+      elastically super
+    end
+
+    def shift
+      elastically super
+    end
+
     def each
       (0...size).each do |i|
         yield self[i]

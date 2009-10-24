@@ -20,10 +20,12 @@ module SimpleResource
       end
 
       def get(query)
-        conn.get(memcache_key(query), false)
-      rescue Memcached::NotFound
         key = "#{query[:collection_name]}/#{query[:key]}"
+        body = conn.get(memcache_key(query), false)
         raise SimpleResource::Exceptions::NotFound, key unless body && body.length > 0
+        body
+      rescue Memcached::NotFound
+        raise SimpleResource::Exceptions::NotFound, key
       end
 
       def put(query, body)

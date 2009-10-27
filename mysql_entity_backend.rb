@@ -52,7 +52,9 @@ module SimpleResource
           record.id = "#{query[:collection_name]}/#{query[:key]}"
           record.save
         end
-        conn.delete(memcache_key(query)) rescue nil
+
+        #conn.delete(memcache_key(query)) rescue nil
+        conn.set(memcache_key(query), body, 0, false)
 
         true
       end

@@ -124,9 +124,9 @@ module SimpleResource
       end
 
       def paginate(index_name, params = {})
-        returning get_index({:index_name => index_name}, params) do |list|
-          list[0].map!{ |item| self.find(item[0]) }
-        end
+        list = get_index({:index_name => index_name}, params)
+        list[0].map!{|item| self.find(item[0]) }
+        list
       end
 
       def find(key)
@@ -159,9 +159,9 @@ module SimpleResource
 
       def create attributes
         attributes["id"] = gen_key! unless attributes["id"]
-        returning self.new(attributes) do |obj|
-          put({:collection_name => collection_name, :key => obj.id}, json_encode(obj.attributes))
-        end
+        obj = self.new(attributes)
+        put({:collection_name => collection_name, :key => obj.id}, json_encode(obj.attributes))
+        obj
       end
 
       def get_lock key

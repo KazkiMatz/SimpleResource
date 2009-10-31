@@ -272,5 +272,6 @@ module SimpleResource
   module Exceptions
     class NotFound < StandardError; end
     class DuplicatedKey < StandardError; end
+    class InvalidKey < StandardError; end
   end
 end

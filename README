@@ -3,6 +3,7 @@ Installation on Rails
 
 0. Dependencies:
     * JSON gem (http://flori.github.com/json/)
+    * MySQL/Ruby
     * ActiveRecord
     * memcached gem (http://blog.evanweaver.com/files/doc/fauna/memcached/files/README.html)
 
@@ -27,16 +28,13 @@ CREATE TABLE `indices` (
 
 
 
-3. Add two new db connection settings to your database.yml. An example below:
+3. Add two new db connection settings to your config/database.yml. An example below:
 
 entity:
   adapter: mysql
   encoding: utf8
-  database: your_db_name
-  pool: 5
-  username: 
-  password: 
-  host: localhost
+  shards:
+    - {host: localhost, database: your_db_name, username: , password: , port: }
 
 index:
   adapter: mysql

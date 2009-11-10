@@ -121,7 +121,9 @@ module SimpleResource
       end
 
       def key_notation key
-        raise SimpleResource::Exceptions::InvalidKey if key[/[^A-Za-z0-9\-_:.\/=&%+]/]
+        if key[/[^A-Za-z0-9\-_:.\/=&%+]/]
+          raise SimpleResource::Exceptions::InvalidKey, key
+        end
         "'#{key}'"
       end
 

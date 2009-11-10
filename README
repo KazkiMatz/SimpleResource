@@ -2,10 +2,10 @@ Installation on Rails
 =====================
 
 0. Dependencies:
-    * JSON gem (http://flori.github.com/json/)
+    * JSON gem : http://flori.github.com/json/
     * MySQL/Ruby
     * ActiveRecord
-    * memcached gem (http://blog.evanweaver.com/files/doc/fauna/memcached/files/README.html)
+    * memcached gem : http://blog.evanweaver.com/files/doc/fauna/memcached/files/README.html
 
 1. Place all files into lib/simple_resource on your Rails project.
 

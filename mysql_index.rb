@@ -25,9 +25,9 @@ self.count_by_sql(sql)
 
       def insert_record index_id, entity_id, sort
         sql =<<"EOS"
-INSERT INTO `indices` (`index_id`, `entity_id`, `sort`) VALUES (?, ?, ?)
+INSERT INTO `indices` (`index_id`, `entity_id`, `sort`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE sort = ?
 EOS
-        self.connection.execute(self.sanitize_sql([sql, index_id.to_i, entity_id, sort.to_i]))
+        self.connection.execute(self.sanitize_sql([sql, index_id.to_i, entity_id, sort.to_i, sort.to_i]))
       end
 
       def remove_record index_id, entity_id

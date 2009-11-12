@@ -194,8 +194,7 @@ module SimpleResource
     end
 
     def == another
-      return false unless another.is_a?(self.class)
-      self.id == another.id
+      another.is_a?(self.class) && self.id == another.id
     end
 
     def copy
@@ -208,6 +207,10 @@ module SimpleResource
 
     def id= value
       @attributes["id"] = value
+    end
+
+    def remove key
+      @attributes.delete key
     end
 
     def save
@@ -225,13 +228,6 @@ module SimpleResource
       end
       self.class.delete(:collection_name => self.class.collection_name, :key => self.id)
       true
-    end
-
-    def lock
-      self.class.get_lock(id)
-      yield self
-    ensure
-      self.class.release_lock(id)
     end
 
     def method_missing(name, *args)

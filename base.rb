@@ -7,11 +7,11 @@ module SimpleResource
     end
 
     def id
-      self["id"]
+      self['id']
     end
 
     def id= value
-      self["id"] = value
+      self['id'] = value
     end
 
     def each
@@ -29,10 +29,10 @@ module SimpleResource
     def method_missing(key, *args)
       key_str = key.to_s
       suffix = key_str.last[-1]
-      if suffix == "="[0]
+      if suffix == '='[0]
         self[key_str[0..-2]] = args.first
       else
-        key_str = key_str[0..-2] if suffix == "?"[0]
+        key_str = key_str[0..-2] if suffix == '?'[0]
         #raise NameError unless has_key?(key_str)
         return nil unless has_key?(key_str)
 
@@ -158,7 +158,7 @@ module SimpleResource
       end
 
       def create attributes
-        attributes["id"] = gen_key! unless attributes["id"]
+        attributes['id'] = gen_key! unless attributes['id']
         obj = self.new(attributes)
         put({:collection_name => collection_name, :key => obj.id}, json_encode(obj.attributes))
         obj
@@ -202,11 +202,11 @@ module SimpleResource
     end
 
     def id
-      @attributes["id"]
+      @attributes['id']
     end
 
     def id= value
-      @attributes["id"] = value
+      @attributes['id'] = value
     end
 
     def remove key

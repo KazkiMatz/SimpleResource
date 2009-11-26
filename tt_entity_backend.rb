@@ -10,22 +10,21 @@ module SimpleResource
     end
 
     module ClassMethods
-
       def conn
-        if PRELOAD_CACHE
-          $tt_conn ||= MemcacheManager.new(TT_HOST[0])
-        else
-          $tt_conn ||= Memcached.new(TT_HOST[0])
-        end
+        $tt_conn ||= if PRELOAD_CACHE
+                       MemcacheManager.new(TT_HOST[0])
+                     else
+                       Memcached.new(TT_HOST[0])
+                     end
       end
 
       def get(query)
         key = "#{query[:collection_name]}/#{query[:key]}"
         body = conn.get(memcache_key(query), false)
-        raise SimpleResource::Exceptions::NotFound, key unless body && body.length > 0
+        raise SimpleResource::Exceptions::NotFound, "entity not found #{key}" unless body && body.length > 0
         body
       rescue Memcached::NotFound
-        raise SimpleResource::Exceptions::NotFound, key
+        raise SimpleResource::Exceptions::NotFound, "entity not found #{key}"
       end
 
       def put(query, body)

@@ -16,11 +16,11 @@ module SimpleResource
     module ClassMethods
 
       def conn
-        if PRELOAD_CACHE
-          $memcache_conn ||= MemcacheManager.new(MEMCACHE_HOST[0])
-        else
-          $memcache_conn ||= Memcached.new(MEMCACHE_HOST[0])
-        end
+        $memcache_conn ||= if PRELOAD_CACHE
+                             MemcacheManager.new(MEMCACHE_HOST[0])
+                           else
+                             Memcached.new(MEMCACHE_HOST[0])
+                           end
       end
 
       def get(query)
@@ -32,7 +32,7 @@ module SimpleResource
           conn.set(memcache_key(query), body, 0, false)
         end
 
-        raise SimpleResource::Exceptions::NotFound, key unless body && body.length > 0
+        raise SimpleResource::Exceptions::NotFound, "entity not found #{key}" unless body && body.length > 0
         body
       end
 

@@ -11,11 +11,7 @@ module SimpleResource
 
     module ClassMethods
       def conn
-        $tt_conn ||= if PRELOAD_CACHE
-                       MemcacheManager.new(TT_HOST[0])
-                     else
-                       Memcached.new(TT_HOST[0])
-                     end
+        $tt_conn ||= SimpleResource::PureMemcached.new(TT_HOST[0], {:timeout => 30})
       end
 
       def get(query)

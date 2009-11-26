@@ -16,11 +16,7 @@ module SimpleResource
     module ClassMethods
 
       def conn
-        $memcache_conn ||= if PRELOAD_CACHE
-                             MemcacheManager.new(MEMCACHE_HOST[0])
-                           else
-                             Memcached.new(MEMCACHE_HOST[0])
-                           end
+        $memcache_conn ||= Memcached.new(MEMCACHE_HOST[0])
       end
 
       def get(query)

@@ -50,7 +50,6 @@ index:
 
 MEMCACHE_HOST = ['localhost:11211']
 MEMCACHE_PREFIX = 'some_prefix_'
-PRELOAD_CACHE = false
 
 5. Check if it works correctly:
 

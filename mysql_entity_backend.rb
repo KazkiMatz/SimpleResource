@@ -85,7 +85,7 @@ module SimpleResource
       end
 
       def db_conn key
-        selected = Digest::MD5.digest(key)[0] % db_config['shards'].size
+        selected = Digest::MD5.digest(key)[0].ord % db_config['shards'].size
         $mysql_entity_conn ||= []
         return $mysql_entity_conn[selected] if $mysql_entity_conn[selected]
 
